@@ -1,5 +1,5 @@
 # SoftI2C
-# scl = Pin(16), sda = Pin(17)
+# scl = Pin(17), sda = Pin(16)
 
 
 import time
@@ -8,7 +8,7 @@ from machine import Pin, SoftI2C
 
 # i2c params
 SLAVE_ADDR = 0x78 # 0x3c < 1
-i2c = SoftI2C(scl=Pin(16), sda=Pin(17), freq=400_000)
+i2c = SoftI2C(scl=Pin(7), sda=Pin(16), freq=400_000)
 
 def i2c_write(write_sig, data):
     i2c.start()
