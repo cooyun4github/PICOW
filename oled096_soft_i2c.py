@@ -1,3 +1,7 @@
+# SoftI2C
+# scl = Pin(16), sda = Pin(17)
+
+
 import time
 from machine import Pin, SoftI2C
 
