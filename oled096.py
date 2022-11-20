@@ -1,15 +1,34 @@
+# Hardware I2C
+# scl = Pin(17), sda = Pin(16)
+
+
 import time
-from machine import Pin, SoftI2C
+from machine import Pin, I2C
 
 
 # i2c params
-SLAVE_ADDR = 0x78 # 0x3c < 1
-i2c = SoftI2C(scl=Pin(16), sda=Pin(17), freq=400_000)
+SLAVE_ADDR = 0 # invalid slave address
+scl = Pin(17)
+sda = Pin(16)
+i2c = I2C(0, scl=Pin(17), sda=Pin(16), freq=400_000)
+
+def i2c_start():
+    scl.on()
+    sda.on()
+    #time.sleep_us(1)
+    sda.off()
+    #time.sleep_us(1)
+
+def i2c_stop():
+    scl.on()
+    sda.off()
+    #time.sleep_us(1)
+    sda.on()
 
 def i2c_write(write_sig, data):
-    i2c.start()
-    i2c.write(bytearray([SLAVE_ADDR, write_sig, data]))
-    i2c.stop()
+    i2c_start()
+    i2c.writeto(0x3c, bytearray([write_sig, data]))
+    i2c_stop()
 
 def scan_i2c_device():
     slv_addrs = i2c.scan()
@@ -18,7 +37,8 @@ def scan_i2c_device():
     else:
         print("i2c devices found:", len(slv_addrs))
         for slv_addr in slv_addrs:
-            print("slv_addr: ", hex(slv_addr)) # 0x3c
+            print("slv_addr: ", hex(slv_addr))
+            SLAVE_ADDR = slv_addr
 
 
 # 0.96 oled params
