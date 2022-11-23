@@ -1,44 +1,13 @@
-# Hardware I2C
-# scl = Pin(17), sda = Pin(16)
-
-
 import time
 from machine import Pin, I2C
 
-
-# i2c params
-SLAVE_ADDR = 0 # invalid slave address
-scl = Pin(17)
-sda = Pin(16)
+# i2c
 i2c = I2C(0, scl=Pin(17), sda=Pin(16), freq=400_000)
+slv_addr = i2c.scan()[0] # 0x3c
+print("i2c device address:", hex(slv_addr))
 
-def i2c_start():
-    scl.on()
-    sda.on()
-    #time.sleep_us(1)
-    sda.off()
-    #time.sleep_us(1)
-
-def i2c_stop():
-    scl.on()
-    sda.off()
-    #time.sleep_us(1)
-    sda.on()
-
-def i2c_write(write_sig, data):
-    i2c_start()
-    i2c.writeto(0x3c, bytearray([write_sig, data]))
-    i2c_stop()
-
-def scan_i2c_device():
-    slv_addrs = i2c.scan()
-    if len(slv_addrs) == 0:
-        print("No i2c device")
-    else:
-        print("i2c devices found:", len(slv_addrs))
-        for slv_addr in slv_addrs:
-            print("slv_addr: ", hex(slv_addr))
-            SLAVE_ADDR = slv_addr
+def i2c_write(sig, data):
+    i2c.writeto(slv_addr, bytearray([sig, data]))
 
 
 # 0.96 oled params
@@ -49,6 +18,7 @@ WRITE_CMD_SIG = 0x00
 PAGE_START = 0xb0
 LOW_COLUMN_ADDR = 0
 HIGH_COLUMN_ADDR = 0x10
+
 
 def fill_black():
     for p in range(8):
@@ -101,7 +71,6 @@ def init_oled():
     i2c_write(WRITE_CMD_SIG, 0xaf) # display on
 
 def main():
-    scan_i2c_device()
     init_oled()
     fill_black()
     while(1):
