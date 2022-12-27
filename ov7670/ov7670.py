@@ -119,9 +119,8 @@ def main1():
             pc_count = 0
 
 
+# 实际证明，使用中断更耗时间
 def main0():
-
-
     vs.irq(trigger = Pin.IRQ_RISING, handler = vs_rising_irq)
     hs.irq(trigger = Pin.IRQ_RISING, handler = hs_rising_irq)
     #pc.irq(trigger = Pin.IRQ_RISING, handler = test_irq)
@@ -142,6 +141,5 @@ def main0():
             count += 1
             print(count)
 
-#应该使用QVGA 240*320
-#应该熟练掌握各种分辨率切换
+
 main1()
